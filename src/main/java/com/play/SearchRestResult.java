@@ -150,9 +150,10 @@ public class SearchRestResult {
 
           // File file = new File("C:\\Users\\U6015446\\Desktop\\searchResults\\SearchResultIds_"+timeStamp.now()+".csv");
            String str = "1986-04-08 12:30";
-           DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+           DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
            LocalDateTime dateTime = LocalDateTime.parse(timeStamp.toString(), formatter);
-           String fileTimeStamp  =str.replace(" ", "_").replace(":", "_");
+
+           String fileTimeStamp  =dateTime.toString().replace(":", "_").replace(".","_");
            File file = new File("C:\\Users\\U6015446\\Desktop\\searchResults\\searchResultIds_"+fileTimeStamp+".csv");
 
           try(FileOutputStream fos = new FileOutputStream(file)){
