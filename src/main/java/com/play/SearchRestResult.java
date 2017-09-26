@@ -18,10 +18,13 @@ import java.util.*;
 
 public class SearchRestResult {
     private static int searchResultCount=0;
+    private  static int countOfIds=0;
 
     public static void main(String[] args) {
         HttpClient client;
         try{
+
+            long startTime=  System.currentTimeMillis();
             HttpParams httpParameters = new BasicHttpParams();
             // Set the timeout in milliseconds until a connection is established.
             int timeoutConnection = 120000;
@@ -48,6 +51,11 @@ public class SearchRestResult {
             }
             System.out.println("Program Execution finished...");
 
+            long endTime=  System.currentTimeMillis();
+            long executionTime = endTime-startTime;
+
+            System.out.println("Program Execution finished in " + executionTime/(60*1000) + " min(s)");
+
 
         }catch (Exception e){
             e.printStackTrace();
@@ -64,7 +72,7 @@ public class SearchRestResult {
         HttpResponse response = client.execute(getRequest);
         String  responseString=  convertStreamToString(response);
         int responseCode = response.getStatusLine().getStatusCode();
-        System.out.println(responseCode);
+        System.out.println("Http Response Code: "+responseCode);
         Thread.sleep(60*300);
         return responseString;
 
@@ -105,7 +113,8 @@ public class SearchRestResult {
                 searchIds.add(field.getValue());
             }
         }
-
+        countOfIds =searchIds.size();
+        System.out.println("count of Ids: "+countOfIds);
         return searchIds;
     }
 
@@ -121,7 +130,7 @@ public class SearchRestResult {
 
          ObjectMapper objectMapper=new ObjectMapper();
          SearchOutput searchOutput= objectMapper.readValue(response, SearchOutput.class);
-         System.out.println("results count: " +searchOutput.getPagedResults().getTotal());
+         System.out.println("total: " +searchOutput.getPagedResults().getTotal());
          Set<String> returnedIds = new HashSet<>();
          returnedIds.addAll(extractIds(searchOutput));
          searchResultCount = searchOutput.getPagedResults().getTotal();
@@ -158,9 +167,13 @@ public class SearchRestResult {
 
           try(FileOutputStream fos = new FileOutputStream(file)){
               PrintWriter w = new PrintWriter(fos);
-              w.println(currentTime);
+              w.println("Report Time: " +currentTime);
               w.println("");
-              w.println("Total Ids: " +searchResultCount);
+              w.println("Total : " +searchResultCount);
+              w.println("");
+              w.println("length: "+data.length());
+              w.println("");
+              w.println("no.of ids : "+countOfIds);
               w.println("");
               w.println(data);
               w.println("");
